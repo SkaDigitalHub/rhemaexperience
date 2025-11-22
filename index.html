@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RHEMA Experience Summit 2025 - Attendance System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Side Menu Styles */
+        .side-menu {
+            width: 250px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 0;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            text-align: center;
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .logo h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .menu-items {
+            list-style: none;
+            padding: 0 15px;
+        }
+
+        .menu-items li {
+            margin-bottom: 10px;
+        }
+
+        .menu-items a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .menu-items a:hover, .menu-items a.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-items i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 20px 0;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card-content {
+            height: 400px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Attendance Form Styles */
+        .attendance-form-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #4a90e2;
+        }
+
+        .btn-primary:hover {
+            background: #3a7bc8;
+        }
+
+        .btn-success {
+            background: #2ecc71;
+        }
+
+        .btn-success:hover {
+            background: #27ae60;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid rgba(46, 204, 113, 0.5);
+        }
+
+        .status-offline {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(231, 76, 60, 0.5);
+        }
+
+        .status-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .pending-submissions {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .pending-submissions h4 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .pending-list {
+            list-style: none;
+        }
+
+        .pending-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pending-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Page Sections */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        /* Success Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            color: #2ecc71;
+            margin-bottom: 20px;
+        }
+
+        .modal h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .modal-close {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #3a7bc8;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 101;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .side-menu {
+                width: 220px;
+            }
+            
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .side-menu {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .side-menu.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Side Menu -->
+    <div class="side-menu">
+        <div class="logo">
+            <h2>RHEMA</h2>
+            <p>Experience Summit 2025</p>
+        </div>
+        
+        <ul class="menu-items">
+            <li><a href="#" class="menu-link active" data-page="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="#" class="menu-link" data-page="analytics"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+            <li><a href="#" class="menu-link" data-page="attendance"><i class="fas fa-users"></i> Attendance</a></li>
+            <li><a href="#" class="menu-link" data-page="locations"><i class="fas fa-map-marker-alt"></i> Locations</a></li>
+            <li><a href="#" class="menu-link" data-page="membership"><i class="fas fa-user-friends"></i> Membership</a></li>
+            
+            <div class="menu-divider"></div>
+            
+            <li><a href="#" class="menu-link" data-page="events"><i class="fas fa-calendar-alt"></i> Events</a></li>
+            <li><a href="#" class="menu-link" data-page="speakers"><i class="fas fa-user"></i> Speakers</a></li>
+            <li><a href="#" class="menu-link" data-page="settings"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="#" class="menu-link" data-page="help"><i class="fas fa-question-circle"></i> Help</a></li>
+        </ul>
+    </div>
+    
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="dashboard-container">
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page-section active">
+                <div class="header">
+                    <h1>RHEMA EXPERIENCE SUMMIT 2025</h1>
+                    <p>Event Analytics Dashboard</p>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Total Attendance</h2>
+                        </div>
+                        <div class="card-content">
+                            <iframe seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKm8ZXCjMAw1Rj0DC2NhL3MdoK3ODi-mAD_uYO5LJZV1TmhEv0i8poMmSdtjkwGRAW9ixOyTpqNqWi/pubchart?oid=1891247686&amp;format=interactive"></iframe>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Location</h2>
+                        </div>
+                        <div class="card-content">
+                            <iframe seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKm8ZXCjMAw1Rj0DC2NhL3MdoK3ODi-mAD_uYO5LJZV1TmhEv0i8poMmSdtjkwGRAW9ixOyTpqNqWi/pubchart?oid=518729588&amp;format=interactive"></iframe>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Membership</h2>
+                        </div>
+                        <div class="card-content">
+                            <iframe seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKm8ZXCjMAw1Rj0DC2NhL3MdoK3ODi-mAD_uYO5LJZV1TmhEv0i8poMmSdtjkwGRAW9ixOyTpqNqWi/pubchart?oid=373145572&amp;format=interactive"></iframe>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Attendees</h2>
+                        </div>
+                        <div class="card-content">
+                            <iframe seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQKm8ZXCjMAw1Rj0DC2NhL3MdoK3ODi-mAD_uYO5LJZV1TmhEv0i8poMmSdtjkwGRAW9ixOyTpqNqWi/pubchart?oid=752504198&amp;format=interactive"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Attendance Page -->
+            <div id="attendance" class="page-section">
+                <div class="header">
+                    <h1>ATTENDANCE RECORDING</h1>
+                    <p>Record and manage participant attendance</p>
+                </div>
+                
+                <!-- Attendance Form -->
+                <div class="attendance-form-container">
+                    <h2 class="form-title">Record Attendance</h2>
+                    
+                    <div id="networkStatus" class="status-indicator status-online">
+                        <i class="fas fa-wifi status-icon"></i>
+                        <span>You are online. Data will be submitted immediately.</span>
+                    </div>
+                    
+                    <form id="attendanceForm">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" class="form-control" placeholder="Enter full name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="tel" id="phoneNumber" class="form-control" placeholder="Enter phone number" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" class="form-control" placeholder="Enter your location" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" placeholder="Enter email address" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="membershipType">Membership Type</label>
+                            <select id="membershipType" class="form-control" required>
+                                <option value="" disabled selected>Select membership type</option>
+                                <option value="Regular">Regular</option>
+                                <option value="VIP">VIP</option>
+                                <option value="Guest">Guest</option>
+                                <option value="Speaker">Speaker</option>
+                                <option value="Volunteer">Volunteer</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-user-plus"></i> Record Attendance
+                        </button>
+                    </form>
+                    
+                    <div id="pendingSubmissions" class="pending-submissions" style="display: none;">
+                        <h4>Pending Submissions (Offline)</h4>
+                        <ul id="pendingList" class="pending-list">
+                            <!-- Pending submissions will appear here -->
+                        </ul>
+                        <button id="retrySubmissions" class="btn btn-success btn-block" style="margin-top: 10px;">
+                            <i class="fas fa-sync-alt"></i> Retry Pending Submissions
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other Pages (Placeholder) -->
+            <div id="analytics" class="page-section">
+                <div class="header">
+                    <h1>ANALYTICS</h1>
+                    <p>Detailed event analytics and insights</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Analytics Page</h2>
+                    </div>
+                    <div class="card-content">
+                        <p style="text-align: center; padding: 20px;">Analytics content will be displayed here</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="locations" class="page-section">
+                <div class="header">
+                    <h1>LOCATIONS</h1>
+                    <p>Event locations and venue information</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Locations Page</h2>
+                    </div>
+                    <div class="card-content">
+                        <p style="text-align: center; padding: 20px;">Location information will be displayed here</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="membership" class="page-section">
+                <div class="header">
+                    <h1>MEMBERSHIP</h1>
+                    <p>Membership management and information</p>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Membership Page</h2>
+                    </div>
+                    <div class="card-content">
+                        <p style="text-align: center; padding: 20px;">Membership information will be displayed here</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>RHEMA EXPERIENCE SUMMIT 2025 &copy; All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Success!</h2>
+            <p>Attendance recorded successfully!</p>
+            <button class="modal-close" id="modalClose">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle functionality
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.querySelector('.side-menu').classList.toggle('active');
+        });
+        
+        // Page Navigation
+        document.querySelectorAll('.menu-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Update active menu item
+                document.querySelectorAll('.menu-link').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Show selected page
+                const pageId = this.getAttribute('data-page');
+                document.querySelectorAll('.page-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(pageId).classList.add('active');
+                
+                // Close mobile menu if open
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.side-menu').classList.remove('active');
+                }
+            });
+        });
+        
+        // Close menu when clicking on a menu item (for mobile)
+        document.querySelectorAll('.menu-items a').forEach(item => {
+            item.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.side-menu').classList.remove('active');
+                }
+            });
+        });
+
+        // Attendance Form Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('attendanceForm');
+            const networkStatus = document.getElementById('networkStatus');
+            const pendingSubmissions = document.getElementById('pendingSubmissions');
+            const pendingList = document.getElementById('pendingList');
+            const retryButton = document.getElementById('retrySubmissions');
+            const successModal = document.getElementById('successModal');
+            const modalClose = document.getElementById('modalClose');
+            
+            // Google Form URL and entry IDs
+            const googleFormURL = 'https://docs.google.com/forms/d/e/1FAIpQLSdTi_fYHjJWh9RcfxZMOgdjAPwJ9DpfRDByzYOuksX7vdL1nw/formResponse';
+            const entryIds = {
+                name: 'entry.466703974',
+                phone: 'entry.612604998',
+                location: 'entry.138675639',
+                email: 'entry.518249278',
+                membership: 'entry.1346483169'
+            };
+            
+            // Check network status
+            function updateNetworkStatus() {
+                if (navigator.onLine) {
+                    networkStatus.className = 'status-indicator status-online';
+                    networkStatus.innerHTML = '<i class="fas fa-wifi status-icon"></i><span>You are online. Data will be submitted immediately.</span>';
+                    
+                    // If we're back online, try to submit any pending forms
+                    submitPendingForms();
+                } else {
+                    networkStatus.className = 'status-indicator status-offline';
+                    networkStatus.innerHTML = '<i class="fas fa-wifi-slash status-icon"></i><span>You are offline. Data will be stored and submitted when connection is restored.</span>';
+                }
+            }
+            
+            // Initialize network status
+            updateNetworkStatus();
+            window.addEventListener('online', updateNetworkStatus);
+            window.addEventListener('offline', updateNetworkStatus);
+            
+            // Load pending submissions from localStorage
+            function loadPendingSubmissions() {
+                const pending = JSON.parse(localStorage.getItem('pendingAttendanceSubmissions') || '[]');
+                if (pending.length > 0) {
+                    pendingSubmissions.style.display = 'block';
+                    pendingList.innerHTML = '';
+                    
+                    pending.forEach((submission, index) => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            <span>${submission.name} - ${submission.membership}</span>
+                            <button class="btn btn-danger" onclick="removePendingSubmission(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                        pendingList.appendChild(li);
+                    });
+                } else {
+                    pendingSubmissions.style.display = 'none';
+                }
+            }
+            
+            // Submit form to Google Forms
+            function submitToGoogleForm(formData) {
+                return new Promise((resolve, reject) => {
+                    const formDataToSubmit = new FormData();
+                    
+                    // Add form data with correct entry IDs
+                    formDataToSubmit.append(entryIds.name, formData.name);
+                    formDataToSubmit.append(entryIds.phone, formData.phone);
+                    formDataToSubmit.append(entryIds.location, formData.location);
+                    formDataToSubmit.append(entryIds.email, formData.email);
+                    formDataToSubmit.append(entryIds.membership, formData.membership);
+                    
+                    fetch(googleFormURL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: formDataToSubmit
+                    })
+                    .then(() => {
+                        // Since we're using no-cors, we can't read the response
+                        // But if we reach here, the request was sent
+                        resolve();
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+                });
+            }
+            
+            // Store form data in localStorage when offline
+            function storePendingSubmission(formData) {
+                const pending = JSON.parse(localStorage.getItem('pendingAttendanceSubmissions') || '[]');
+                pending.push(formData);
+                localStorage.setItem('pendingAttendanceSubmissions', JSON.stringify(pending));
+                loadPendingSubmissions();
+            }
+            
+            // Submit all pending forms when back online
+            function submitPendingForms() {
+                const pending = JSON.parse(localStorage.getItem('pendingAttendanceSubmissions') || '[]');
+                if (pending.length === 0) return;
+                
+                let successCount = 0;
+                
+                // Process each pending submission
+                pending.forEach((submission, index) => {
+                    submitToGoogleForm(submission)
+                        .then(() => {
+                            successCount++;
+                            // Remove from pending after successful submission
+                            removePendingSubmission(index - successCount + 1);
+                        })
+                        .catch(error => {
+                            console.error('Failed to submit pending form:', error);
+                        });
+                });
+            }
+            
+            // Remove a pending submission
+            window.removePendingSubmission = function(index) {
+                const pending = JSON.parse(localStorage.getItem('pendingAttendanceSubmissions') || '[]');
+                if (index >= 0 && index < pending.length) {
+                    pending.splice(index, 1);
+                    localStorage.setItem('pendingAttendanceSubmissions', JSON.stringify(pending));
+                    loadPendingSubmissions();
+                }
+            };
+            
+            // Show success modal
+            function showSuccessModal() {
+                successModal.classList.add('active');
+            }
+            
+            // Close success modal
+            modalClose.addEventListener('click', function() {
+                successModal.classList.remove('active');
+            });
+            
+            // Form submission handler
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    name: document.getElementById('fullName').value,
+                    phone: document.getElementById('phoneNumber').value,
+                    location: document.getElementById('location').value,
+                    email: document.getElementById('email').value,
+                    membership: document.getElementById('membershipType').value
+                };
+                
+                if (navigator.onLine) {
+                    // Submit directly to Google Forms
+                    submitToGoogleForm(formData)
+                        .then(() => {
+                            showSuccessModal();
+                            form.reset();
+                        })
+                        .catch(error => {
+                            console.error('Error submitting form:', error);
+                            alert('Error recording attendance. Storing for later submission.');
+                            storePendingSubmission(formData);
+                        });
+                } else {
+                    // Store for later submission
+                    storePendingSubmission(formData);
+                    alert('Attendance stored offline. It will be submitted when connection is restored.');
+                    form.reset();
+                }
+            });
+            
+            // Retry pending submissions
+            retryButton.addEventListener('click', function() {
+                if (navigator.onLine) {
+                    submitPendingForms();
+                } else {
+                    alert('You are still offline. Please check your connection and try again.');
+                }
+            });
+            
+            // Load any pending submissions on page load
+            loadPendingSubmissions();
+        });
+    </script>
+</body>
+</html>
